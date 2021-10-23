@@ -9,5 +9,5 @@ public class BookieApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BookieApplication.class, args);
 	}
-
+		
 }
