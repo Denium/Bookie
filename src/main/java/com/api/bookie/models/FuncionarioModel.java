@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "funcionario")
 public class FuncionarioModel {
-
+  
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
