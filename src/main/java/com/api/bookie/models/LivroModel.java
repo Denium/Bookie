@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "livro")
 public class LivroModel {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
