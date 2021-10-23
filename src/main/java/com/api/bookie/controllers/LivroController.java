@@ -1,10 +1,17 @@
 package com.api.bookie.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import com.api.bookie.dtos.LivroAtualizarDTO;
+import com.api.bookie.dtos.LivroDTO;
+import com.api.bookie.dtos.LivroSalvarDTO;
 import com.api.bookie.models.LivroModel;
 import com.api.bookie.repositories.ILivroRepository;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 
 @RequestMapping("/livro")
-public class LivroController {
+public class LivroController extends BaseController {
 
   private final ILivroRepository _repository;
 
@@ -26,25 +33,37 @@ public class LivroController {
   }
 
   @PostMapping("/salvar")
-  public int Salvar(@RequestBody LivroModel model) {
-    LivroModel _model = _repository.save(model);
-    return _model.getId();
+  public int Salvar(@RequestBody @Valid LivroSalvarDTO dto) {
+    LivroModel _model = new LivroModel();
+    BeanUtils.copyProperties(dto, _model);
+    return _repository.save(_model).getId();
   }
 
   @GetMapping("/buscar-tudo")
-  public List<LivroModel> BuscarTudo() {
-    return _repository.findAll();
+  public List<LivroDTO> BuscarTudo() {
+    List<LivroDTO> dtos = new ArrayList<LivroDTO>();
+    var livros = _repository.findAll();
+    for (LivroModel l : livros) {
+      LivroDTO dto = new LivroDTO();
+      BeanUtils.copyProperties(l, dto);
+      dtos.add(dto);
+    }
+    return dtos;
   }
 
   @PutMapping("/atualizar")
-  public int Atualizar(@RequestBody LivroModel model) {
-    LivroModel _model = _repository.save(model);
-    return _model.getId();
+  public int Atualizar(@RequestBody @Valid LivroAtualizarDTO dto) {
+    LivroModel _model = new LivroModel();
+    BeanUtils.copyProperties(dto, _model);
+    return _repository.save(_model).getId();
   }
 
   @GetMapping("/buscar-por-id/{id}")
-  public LivroModel BuscarPorId(@PathVariable Integer id) {
-    return _repository.findById(id).get();
+  public LivroDTO BuscarPorId(@PathVariable Integer id) {
+    var livroModel = _repository.findById(id).get();
+    var livroDto = new LivroDTO();
+    BeanUtils.copyProperties(livroModel, livroDto);
+    return livroDto;
   }
 
   @DeleteMapping("/excluir/{id}")
